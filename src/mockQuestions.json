@@ -1,22 +1,28 @@
 {
-    "text": "What is the capital city of France?",
+  "id": 1,  
+  "text": "What is the capital city of France?",
     "choices": [
       {
         "id": "a",
-        "text": "Madrid"
+        "text": "Madrid",
+        "isCorrect":false
       },
       {
         "id": "b",
-        "text": "Paris"
+        "text": "Paris",
+        "isCorrect":true
       },
       {
         "id": "c",
-        "text": "Rome"
+        "text": "Rome",
+        "isCorrect":false
       },
       {
         "id": "d",
-        "text": "Berlin"
+        "text": "Berlin",
+        "isCorrect":false
       }
-    ]
+    ],
+    "explanation": ""
   }
   

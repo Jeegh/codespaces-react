@@ -1,12 +1,23 @@
 import { useState, useEffect } from "react";
 import mockQuestions from "./mockQuestions.json";
-
 export function Question() {
   const [question, setQuestion] = useState(null);
   const [answer, setAnswer] = useState({});
   const [timeLeft, setTimeLeft] = useState(120); // 2 minutes in seconds
   const [isReady, setIsReady] = useState(false);
   const [answersList, setAnswersList] = useState([])
+
+  //
+  const [questions, setQuestions] = useState([]);
+  useEffect(() => {
+    const readMarkdownFile = async () => {
+      const markdownText = await Promise.resolve("questions.md", "utf-8");
+      console.log(markdownText);
+      // const jsonData = await markdownToJSON.parse(markdownText);
+      // setQuestions(jsonData);
+    };
+    readMarkdownFile();
+  }, []);
 
   async function fetchQuestion() {
     return Promise.resolve(mockQuestions);
@@ -61,6 +72,21 @@ export function Question() {
 
   return (
     <div className="max-w-4xl mx-auto p-12">
+      <div>
+      {questions.map((question) => (
+        <div key={question.id}>
+          <h3>{question.text}</h3>
+          <ul>
+            {question.choices.map((choice) => (
+              <li key={choice.id}>
+                {choice.text} {choice.isCorrect ? "(Correct)" : ""}
+              </li>
+            ))}
+          </ul>
+          <p>{question.explanation}</p>
+        </div>
+      ))}
+    </div>
       {/* Timer */}
       <div className="text-right text-sm text-gray-500 mb-4">
         Time left: {formatTimeLeft()}

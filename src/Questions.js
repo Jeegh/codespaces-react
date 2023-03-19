@@ -3,9 +3,10 @@ import mockQuestions from "./mockQuestions.json";
 
 export function Question() {
   const [question, setQuestion] = useState(null);
-  const [answer, setAnswer] = useState(null);
+  const [answer, setAnswer] = useState({});
   const [timeLeft, setTimeLeft] = useState(120); // 2 minutes in seconds
   const [isReady, setIsReady] = useState(false);
+  const [answersList, setAnswersList] = useState([])
 
   async function fetchQuestion() {
     return Promise.resolve(mockQuestions);
@@ -40,7 +41,12 @@ export function Question() {
   }
 
   async function handleNextClick() {
-    // TODO: Implement next button functionality
+    
+    // Save the current answer and question to local storage
+    const updatedAnswers = [...answersList]
+    updatedAnswers[question] = 'Some answer'
+    localStorage.setItem('quiz-answers', JSON.stringify(updatedAnswers))
+
     await fetchQuestion();
   }
   function formatTimeLeft() {
@@ -62,22 +68,36 @@ export function Question() {
       {/* Question */}
       <h2 className="text-2xl font-medium mb-4">{question.text}</h2>
 
-      {/* Choices */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+       {/* Choices */}
+       <div className="grid grid-cols-1 gap-4">
         {question.choices.map((choice) => (
-          <label key={choice.id} className="flex items-center">
-            <input
-              type="radio"
-              className="form-radio text-indigo-600 h-5 w-5"
-              name="answer"
-              value={choice.id}
-              checked={answer === choice.id}
-              onChange={handleAnswerChange}
-            />
-            <span className="ml-2 text-gray-700">{choice.text}</span>
-          </label>
+          <div
+            key={choice.id}
+            className={`border rounded-md p-4 flex items-center justify-between cursor-pointer ${
+              answer[choice.id] ? "bg-indigo-100" : ""
+            }`}
+            onClick={() =>
+              setAnswer((prevAnswer) => ({
+                ...prevAnswer,
+                [choice.id]: !prevAnswer[choice.id],
+              }))
+            }
+          >
+            <label className="flex items-center w-full">
+              <input
+                type="checkbox"
+                className="form-checkbox text-indigo-600 h-5 w-5"
+                name="answer"
+                value={choice.id}
+                checked={answer[choice.id] || false}
+                onChange={handleAnswerChange}
+              />
+              <span className="ml-2 text-gray-700">{choice.text}</span>
+            </label>
+          </div>
         ))}
       </div>
+
 
       {/* Navigation buttons */}
       <div className="mt-6 flex justify-between">
